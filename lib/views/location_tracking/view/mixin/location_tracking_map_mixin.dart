@@ -6,10 +6,12 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
   double pace = 0;
   Set<Marker> markers = {};
   LatLng _initialcameraposition = LatLng(37.33500926, -122.03272188);
+
   final List<LatLng> _polylineCoordinatesList = [];
   LocationData? _currentPosition;
   LocationData? _lastMarkerPosition;
   bool trackingStarted = false;
+  final _locationCacheOperation = LocationStoreFunction.instance;
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController.complete(controller);
@@ -20,8 +22,8 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
       accuracy: LocationAccuracy.navigation,
     );
 
-    geoLocator.Geolocator.getPositionStream(
-      locationSettings: geoLocator.LocationSettings(accuracy: geoLocator.LocationAccuracy.best),
+    geolocator.Geolocator.getPositionStream(
+      locationSettings: geolocator.LocationSettings(accuracy: geolocator.LocationAccuracy.best),
     ).listen((position) async {
       if (trackingStarted) {
         _currentPosition = LocationData.fromMap({
@@ -32,7 +34,7 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
         final GoogleMapController controller = await _mapController.future;
         controller.animateCamera(
           CameraUpdate.newCameraPosition(
-            CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 20),
+            CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 16),
           ),
         );
         if (_lastMarkerPosition?.longitude != null && _lastMarkerPosition?.latitude != null) {
@@ -44,6 +46,7 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
           );
           if (distance > 90) {
             _addMarker(LatLng(position.latitude, position.longitude), 'Konum');
+
             _lastMarkerPosition = _currentPosition;
           }
         } else {
@@ -60,23 +63,32 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
   }
 
   double _calculateDistance({required double startLat, required double startLong, required double endLat, required double endLong}) {
-    final distance = (geoLocator.GeolocatorPlatform.instance.distanceBetween(startLat, startLong, endLat, endLong));
+    final distance = (geolocator.GeolocatorPlatform.instance.distanceBetween(startLat, startLong, endLat, endLong));
     return distance;
   }
 
   void _addMarker(LatLng position, String address) {
-    markers.add(
-      Marker(
-        markerId: MarkerId(position.toString()),
-        position: position,
-        infoWindow: InfoWindow(title: 'Konum', snippet: address),
-      ),
+    final marker = Marker(
+      markerId: MarkerId(position.toString()),
+      position: position,
     );
+    markers.add(marker);
+    _locationCacheOperation.addLocation(isFinished: false, markers: markers, polylines: _polylineCoordinatesList);
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
+    setUnfinished();
+  }
+
+  Future<void> setUnfinished() async {
+    final locationStoreResponseModel = await _locationCacheOperation.getUnfinishedRoute();
+    if (locationStoreResponseModel != null) {
+      markers = locationStoreResponseModel.markers!;
+      _polylineCoordinatesList.addAll(locationStoreResponseModel.polylines!);
+      setState(() {});
+    }
   }
 }
