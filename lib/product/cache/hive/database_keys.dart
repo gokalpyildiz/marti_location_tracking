@@ -1,5 +1,6 @@
+///key value in save process
 enum DatabaseKeys {
-  LOCATION_KEY('location_key'),
+  LAST_UNFINISHED_TRACKING('last_unfinished_tracking'),
   ;
 
   final String value;
