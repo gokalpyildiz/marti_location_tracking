@@ -5,10 +5,12 @@ class AssetsImagesGen {
 
   /// File path: assets/images/img_flags.png
   AssetGenImage get martiIcon => const AssetGenImage('assets/images/marti_logo.png');
+  AssetGenImage get mapLogo => const AssetGenImage('assets/images/goole_maps.jpg');
 
   /// List of all assets
   List<AssetGenImage> get values => [
         martiIcon,
+        mapLogo,
       ];
 }
 

@@ -22,6 +22,6 @@ class AppRoute {
 
   static AutoRoute dashboardRoute = AutoRoute(path: dashboard, page: DashBoardRoute.page, children: [
     AutoRoute(path: locationTrackingNested, page: LocationTrackingRoute.page, initial: true),
-    AutoRoute(path: profileNested, page: ProfileRoute.page),
+    AutoRoute(path: profileNested, page: ProfileRoute.page, maintainState: false),
   ]);
 }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:marti_location_tracking/product/cache/hive/hive_type_ids.dart';
@@ -12,6 +14,7 @@ class LocationStoreModel extends Equatable {
     this.isFinished,
     this.markers,
     this.polylines,
+    this.image,
   });
 
   @HiveField(0)
@@ -20,11 +23,14 @@ class LocationStoreModel extends Equatable {
   final List<MarkerStoreModel>? markers;
   @HiveField(2)
   final List<LatlngStoreModel>? polylines;
+  @HiveField(3)
+  final Uint8List? image;
 
   @override
   List<Object?> get props => [
         isFinished,
         markers,
         polylines,
+        image,
       ];
 }

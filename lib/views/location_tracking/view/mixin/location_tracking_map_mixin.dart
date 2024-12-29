@@ -1,12 +1,10 @@
 part of '../location_tracking_view.dart';
 
 mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
-  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
-
   late final LocationTrackingCubit cubit;
 
   void _onMapCreated(GoogleMapController controller) {
-    _mapController.complete(controller);
+    cubit.mapController.complete(controller);
   }
 
   void startTracking() async {
@@ -16,7 +14,7 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
       if (cubit.trackingStatus == TrackingStatusEnum.STARTED_CONTINUE) {
         cubit.polylineCoordinatesList.add(LatLng(position.latitude, position.longitude));
         cubit.currentPosition = LocationData.fromMap({'latitude': position.latitude, 'longitude': position.longitude});
-        final GoogleMapController controller = await _mapController.future;
+        final GoogleMapController controller = await cubit.mapController.future;
         controller.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 16),

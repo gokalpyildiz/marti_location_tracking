@@ -18,6 +18,7 @@ class _PausedButtons extends StatelessWidget {
               onPressed: () async {
                 await cubit.completeActivity();
                 if (context.mounted) {
+                  //todo translate
                   await InfoDialog.show(title: 'Konum takibi tamamlandı', context: context, onTapOk: null);
                 }
               },
