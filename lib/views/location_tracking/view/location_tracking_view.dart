@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart' as geoLocator;
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/components/base_widgets/marti_scaffold.dart';
+import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 part 'subwidgets/location_tracking_map.dart';
 part 'mixin/location_tracking_map_mixin.dart';
 

@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:marti_location_tracking/product/cache/base/cache_manager.dart';
+import 'package:marti_location_tracking/product/cache/hive/hive_box_names.dart';
+import 'package:marti_location_tracking/product/model/latlng_store_model.dart';
+import 'package:marti_location_tracking/product/model/location_store_model.dart';
+import 'package:marti_location_tracking/product/model/marker_store_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// The HiveCacheManager class is an implementation of the CacheManager class.
@@ -40,10 +44,16 @@ final class HiveCacheManager extends CacheManager {
     }
   }
 
-  Future<void> setAdapters() async {}
+  Future<void> setAdapters() async {
+    Hive.registerAdapter(LocationStoreModelAdapter());
+    Hive.registerAdapter(LatlngStoreModelAdapter());
+    Hive.registerAdapter(MarkerStoreModelAdapter());
+  }
 
   Future<void> setBoxes(Uint8List encryptionKey) async {
-    try {} catch (e) {
+    try {
+      await Hive.openBox<LocationStoreModel>(HiveBoxNames.location.value);
+    } catch (e) {
       debugPrint('Error: $e');
     }
   }
@@ -69,20 +79,4 @@ final class HiveCacheManager extends CacheManager {
     final key = await secureStorage.read(key: 'key');
     return base64Url.decode(key!);
   }
-}
-
-enum HiveBoxNames {
-  userTrackingInfo('UserTrackingInfo'),
-  ;
-
-  final String value;
-  const HiveBoxNames(this.value);
-}
-
-enum DatabaseKeys {
-  USER_TRACKING_INFO('userTrackingInfo'),
-  ;
-
-  final String value;
-  const DatabaseKeys(this.value);
 }
