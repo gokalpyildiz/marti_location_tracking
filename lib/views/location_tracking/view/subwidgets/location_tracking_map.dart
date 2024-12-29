@@ -48,6 +48,7 @@ class __LocationTrackingMapState extends State<_LocationTrackingMap> with Locati
               onPressed: () {
                 trackingStarted = false;
                 _polylineCoordinatesList.clear();
+                _lastMarkerPosition = null;
                 setState(() {});
               },
               child: Text('Reset')),
