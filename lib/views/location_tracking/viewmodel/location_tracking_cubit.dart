@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 part 'location_tracking_state.dart';
 
@@ -19,6 +20,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   LocationData? currentPosition;
   LocationData? lastMarkerPosition;
   bool trackingStarted = false;
+  bool isBackground = false;
   final _locationCacheOperation = LocationStoreFunction.instance;
   Future<void> init() async {
     await Future.wait([_setInitialCameraPosition(), getUnfinished()]);
@@ -55,9 +57,110 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   Future<void> getUnfinished() async {
     final locationStoreResponseModel = await _locationCacheOperation.getUnfinishedRoute();
     if (locationStoreResponseModel?.isFinished == false) {
+      markers.clear();
+      polylineCoordinatesList.clear();
       markers = locationStoreResponseModel!.markers ?? {};
       polylineCoordinatesList.addAll(locationStoreResponseModel.polylines ?? []);
       trackingStarted = true;
+    }
+  }
+
+  Future<void> stopTrackingBackground() async {
+    await getUnfinished();
+    isBackground = false;
+    bg.BackgroundGeolocation.stop();
+  }
+
+  void startBackground() {
+    final backgroundMarkers = markers;
+    final backgroundPolylineCoordinatesList = polylineCoordinatesList;
+    final markerId = MarkerId('background');
+    isBackground = true;
+    bg.Location currentLocation;
+    bg.BackgroundGeolocation.onLocation((bg.Location location) {
+      final latitude = location.coords.latitude;
+      final longitude = location.coords.longitude;
+      if (lastMarkerPosition?.longitude != null && lastMarkerPosition?.latitude != null) {
+        final distance = (geolocator.GeolocatorPlatform.instance
+            .distanceBetween(lastMarkerPosition!.latitude!, lastMarkerPosition!.longitude!, currentPosition!.latitude!, currentPosition!.longitude!));
+        if (distance > 90) {
+          final marker = Marker(
+            markerId: markerId,
+            position: LatLng(latitude, longitude),
+          );
+          backgroundMarkers.add(marker);
+          backgroundPolylineCoordinatesList.add(LatLng(latitude, longitude));
+          _locationCacheOperation.updateUnfinishedLocation(
+              isFinished: false, markers: backgroundMarkers, polylines: backgroundPolylineCoordinatesList);
+        }
+      } else {
+        final marker = Marker(
+          markerId: markerId,
+          position: LatLng(latitude, longitude),
+        );
+        backgroundMarkers.add(marker);
+        backgroundPolylineCoordinatesList.add(LatLng(latitude, longitude));
+        _locationCacheOperation.updateUnfinishedLocation(isFinished: false, markers: backgroundMarkers, polylines: backgroundPolylineCoordinatesList);
+      }
+    });
+
+    // Fired whenever the plugin changes motion-state (stationary->moving and vice-versa)
+    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
+      print('[motionchange] - ${location.coords.latitude}, ${location.coords.latitude}');
+    });
+
+    // Fired whenever the state of location-services changes.  Always fired at boot
+    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
+      print('[providerchange] - $event');
+    });
+
+    ////
+    // 2.  Configure the plugin
+    //
+    bg.BackgroundGeolocation.ready(bg.Config(
+            desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+            distanceFilter: 10.0,
+            stopOnTerminate: false,
+            startOnBoot: true,
+            debug: true,
+            logLevel: bg.Config.LOG_LEVEL_VERBOSE))
+        .then((bg.State state) {
+      if (!state.enabled) {
+        bg.BackgroundGeolocation.start();
+      }
+    });
+  }
+
+  void setLocationForBackground(
+      {required double latitude,
+      required double longitude,
+      required MarkerId markerId,
+      required Set<Marker> markers,
+      required List<LatLng> polylineCoordinatesList}) {
+    if (lastMarkerPosition?.longitude != null && lastMarkerPosition?.latitude != null) {
+      final distance = calculateDistance(
+        startLat: lastMarkerPosition!.latitude!,
+        startLong: lastMarkerPosition!.longitude!,
+        endLat: currentPosition!.latitude!,
+        endLong: currentPosition!.longitude!,
+      );
+      if (distance > 90) {
+        final marker = Marker(
+          markerId: markerId,
+          position: LatLng(latitude, longitude),
+        );
+        markers.add(marker);
+        polylineCoordinatesList.add(LatLng(latitude, longitude));
+        _locationCacheOperation.updateUnfinishedLocation(isFinished: false, markers: markers, polylines: polylineCoordinatesList);
+      }
+    } else {
+      final marker = Marker(
+        markerId: markerId,
+        position: LatLng(latitude, longitude),
+      );
+      markers.add(marker);
+      polylineCoordinatesList.add(LatLng(latitude, longitude));
+      _locationCacheOperation.updateUnfinishedLocation(isFinished: false, markers: markers, polylines: polylineCoordinatesList);
     }
   }
 }

@@ -33,24 +33,29 @@ class _LocationTrackingViewState extends State<LocationTrackingView> with Widget
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
 
     switch (state) {
       case AppLifecycleState.resumed:
         print("Uygulama ön planda.");
+        await cubit.stopTrackingBackground();
         break;
       case AppLifecycleState.inactive:
         print("Uygulama inaktif.");
+        cubit.startBackground();
         break;
       case AppLifecycleState.paused:
         print("Uygulama arka planda.");
+        // cubit.startBackground();
         break;
       case AppLifecycleState.detached:
         print("Uygulama kapatılıyor.");
+        // cubit.startBackground();
         break;
       case AppLifecycleState.hidden:
         print("Uygulama gizlendi.");
+        // cubit.startBackground();
         break;
     }
   }
