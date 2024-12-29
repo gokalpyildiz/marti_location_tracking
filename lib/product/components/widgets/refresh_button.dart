@@ -27,15 +27,16 @@ class _RefreshButtonState extends State<RefreshButton> with SingleTickerProvider
     super.dispose();
   }
 
-  void _onRefreshPressed() {
+  Future<void> _onRefreshPressed() async {
     if (!_controller.isAnimating) {
       _controller.repeat();
-      widget.onPressed();
-      Future.delayed(const Duration(seconds: 2), () {
+
+      await Future.delayed(const Duration(seconds: 2), () {
         if (context.mounted) {
           _controller.reset();
         }
       });
+      widget.onPressed();
     }
   }
 

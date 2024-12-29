@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
 import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
+
 part 'location_tracking_state.dart';
 
 class LocationTrackingCubit extends Cubit<LocationTrackingState> {
@@ -97,6 +98,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
       if (lastMarkerPosition?.longitude != null && lastMarkerPosition?.latitude != null) {
         final distance = (geolocator.GeolocatorPlatform.instance
             .distanceBetween(lastMarkerPositionBackground!.latitude!, lastMarkerPositionBackground!.longitude!, latitude, longitude));
+        print('distance: $distance');
         if (distance > 90) {
           final markerId = MarkerId(((backgroundMarkers.length) + 1).toString());
           final marker = Marker(
@@ -164,8 +166,8 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     emit(state.copyWith(showPausedButtons: false));
   }
 
-  void restartActivity() async {
-    resetDatas();
+  Future<void> restartActivity() async {
+    await resetDatas();
     trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
     emit(state.copyWith(showPausedButtons: false));
   }
