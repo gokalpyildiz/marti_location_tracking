@@ -27,23 +27,26 @@ class __LocationTrackingMapState extends State<_LocationTrackingMap> with Locati
               zoomGesturesEnabled: true,
               zoomControlsEnabled: true,
               polylines: {
-                if (cubit.trackingStarted)
+                if (cubit.trackingStatus == TrackingStatusEnum.STARTED_CONTINUE || cubit.trackingStatus == TrackingStatusEnum.STARTED_PAUSED)
                   Polyline(
                     polylineId: const PolylineId("route"),
                     points: cubit.polylineCoordinatesList,
-                    //TODO color will be taken from the theme.
-                    color: Colors.green,
+                    color: context.colorScheme.primary,
                     width: 6,
                   ),
               },
             ),
             TextButton(
                 onPressed: () {
-                  if (cubit.trackingStarted) {
-                    cubit.trackingStarted = false;
-                  } else {
-                    cubit.trackingStarted = true;
-                    startTracking();
+                  switch (cubit.trackingStatus) {
+                    case TrackingStatusEnum.STARTED_CONTINUE:
+                      cubit.trackingStatus = TrackingStatusEnum.STARTED_PAUSED;
+                    case TrackingStatusEnum.STARTED_PAUSED:
+                      cubit.trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
+                    case TrackingStatusEnum.STOPED:
+                    case TrackingStatusEnum.BACKGROUND:
+                      cubit.trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
+                      break;
                   }
                 },
                 child: Text('Start Tracking')),
