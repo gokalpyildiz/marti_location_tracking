@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/components/base_widgets/marti_scaffold.dart';
 import 'package:marti_location_tracking/product/components/dialog/show_address_dialog.dart';
+import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
+import 'package:marti_location_tracking/product/utils/extensions/context_extension.dart';
 import 'package:marti_location_tracking/views/location_tracking/viewmodel/location_tracking_cubit.dart';
 part 'subwidgets/location_tracking_map.dart';
 part 'mixin/location_tracking_map_mixin.dart';
@@ -41,6 +43,7 @@ class _LocationTrackingViewState extends State<LocationTrackingView> with Widget
     switch (state) {
       case AppLifecycleState.resumed:
         print("Uygulama ön planda.");
+        cubit.trackingStatus = TrackingStatusEnum.BACKGROUND;
         await cubit.stopTrackingBackground();
         break;
       case AppLifecycleState.inactive:
@@ -73,6 +76,7 @@ class _LocationTrackingViewState extends State<LocationTrackingView> with Widget
                 state.selectedMarkerLongitude != null &&
                 state.selectedMarkerLatitude != 0 &&
                 state.selectedMarkerLongitude != 0) {
+              //It works when you click on the marker
               await ShowAddressDialog.show(latitude: state.selectedMarkerLatitude!, longitude: state.selectedMarkerLongitude!, context: context);
               cubit.clearSelectedMarker();
             }

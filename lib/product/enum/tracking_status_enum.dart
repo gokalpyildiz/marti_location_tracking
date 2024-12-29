@@ -1,0 +1,6 @@
+enum TrackingStatusEnum {
+  STARTED_PAUSED,
+  STARTED_CONTINUE,
+  STOPED,
+  BACKGROUND,
+}
