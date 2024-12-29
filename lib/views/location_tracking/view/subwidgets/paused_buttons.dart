@@ -28,7 +28,7 @@ class _PausedButtons extends StatelessWidget {
             ),
           ),
           RefreshButton(onPressed: () async {
-            await cubit.resetDatas();
+            await cubit.restartActivity();
             if (context.mounted) {
               InfoDialog.show(title: 'Konum takibi yeniden başlatıldı', context: context, onTapOk: null);
             }
