@@ -48,5 +48,8 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
   void initState() {
     super.initState();
     cubit = context.read<LocationTrackingCubit>();
+    if (cubit.trackingStarted) {
+      startTracking();
+    }
   }
 }

@@ -54,9 +54,10 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
 
   Future<void> getUnfinished() async {
     final locationStoreResponseModel = await _locationCacheOperation.getUnfinishedRoute();
-    if (locationStoreResponseModel != null) {
-      markers = locationStoreResponseModel.markers!;
-      polylineCoordinatesList.addAll(locationStoreResponseModel.polylines!);
+    if (locationStoreResponseModel?.isFinished == false) {
+      markers = locationStoreResponseModel!.markers ?? {};
+      polylineCoordinatesList.addAll(locationStoreResponseModel.polylines ?? []);
+      trackingStarted = true;
     }
   }
 }
