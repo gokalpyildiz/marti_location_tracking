@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
+import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 
 part 'location_tracking_state.dart';
 
@@ -45,17 +45,25 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     return distance;
   }
 
-  void addMarker(LatLng position, String address) {
+  void addMarker(LatLng position) {
+    if (position.latitude == 0 && position.longitude == 0) return;
     final marker = Marker(
-      markerId: MarkerId(position.toString()),
+      markerId: MarkerId(position.hashCode.toString()),
       position: position,
+      onTap: () {
+        emit(state.copyWith(selectedMarkerLatitude: position.latitude, selectedMarkerLongitude: position.longitude));
+      },
     );
     markers.add(marker);
     _locationCacheOperation.updateUnfinishedLocation(isFinished: false, markers: markers, polylines: polylineCoordinatesList);
   }
 
   Future<void> getUnfinished() async {
-    final locationStoreResponseModel = await _locationCacheOperation.getUnfinishedRoute();
+    final locationStoreResponseModel = await _locationCacheOperation.getUnfinishedRoute(
+      (double latitude, double longitude) async {
+        emit(state.copyWith(selectedMarkerLatitude: latitude, selectedMarkerLongitude: longitude));
+      },
+    );
     if (locationStoreResponseModel?.isFinished == false) {
       markers.clear();
       polylineCoordinatesList.clear();
@@ -151,6 +159,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
         );
         markers.add(marker);
         polylineCoordinatesList.add(LatLng(latitude, longitude));
+        currentPosition = LocationData.fromMap({'latitude': latitude, 'longitude': longitude});
         _locationCacheOperation.updateUnfinishedLocation(isFinished: false, markers: markers, polylines: polylineCoordinatesList);
       }
     } else {
@@ -160,7 +169,12 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
       );
       markers.add(marker);
       polylineCoordinatesList.add(LatLng(latitude, longitude));
+      currentPosition = LocationData.fromMap({'latitude': latitude, 'longitude': longitude});
       _locationCacheOperation.updateUnfinishedLocation(isFinished: false, markers: markers, polylines: polylineCoordinatesList);
     }
+  }
+
+  void clearSelectedMarker() {
+    emit(state.copyWith(selectedMarkerLatitude: 0, selectedMarkerLongitude: 0));
   }
 }
