@@ -93,9 +93,8 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     }
   }
 
-  //Tracking continues in the background
   void startBackground() {
-    if (trackingStatus == TrackingStatusEnum.STOPED) return;
+    if (trackingStatus == TrackingStatusEnum.STOPED || trackingStatus == TrackingStatusEnum.STARTED_PAUSED) return;
     final locationCacheOperationBackground = LocationStoreFunction.instance;
     final backgroundMarkers = markers;
     final backgroundPolylineCoordinatesList = polylineCoordinatesList;
@@ -165,6 +164,8 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   Future<void> completeActivity() async {
     final controller = await mapController.future;
     final imageBytes = await controller.takeSnapshot();
+    final lastPoint = polylineCoordinatesList.last;
+    addMarker(lastPoint);
     await _locationCacheOperation.addFinishedLocation(markers: markers, polylines: polylineCoordinatesList, image: imageBytes);
     resetDatas();
     emit(state.copyWith(showPausedButtons: false));
@@ -178,7 +179,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
 
   void resumeActivity() {
     trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
-    emit(state.copyWith(showPausedButtons: false));
+    emit(state.copyWith(showPausedButtons: !state.showPausedButtons));
   }
 
   void clearSelectedMarker() {
@@ -191,7 +192,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
         resumeActivity();
         break;
       case TrackingStatusEnum.STARTED_PAUSED:
-        emit(state.copyWith(showPausedButtons: true));
+        resumeActivity();
       case TrackingStatusEnum.STARTED_CONTINUE:
         trackingStatus = TrackingStatusEnum.STARTED_PAUSED;
         emit(state.copyWith(showPausedButtons: true));

@@ -47,7 +47,6 @@ class _LocationTrackingViewState extends State<LocationTrackingView> with Widget
 
     switch (state) {
       case AppLifecycleState.resumed:
-        cubit.trackingStatus = TrackingStatusEnum.BACKGROUND;
         await cubit.stopTrackingBackground();
         break;
       case AppLifecycleState.inactive:

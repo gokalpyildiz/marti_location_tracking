@@ -68,9 +68,7 @@ class _SplashViewState extends State<SplashView> {
         negativeAction: 'Deny',
       ),
     );
-    bg.BackgroundGeolocation.ready(params).then((bg.State state) {
-      print('[ready] BackgroundGeolocation is configured and ready to use');
-    });
+    bg.BackgroundGeolocation.ready(params).then((bg.State state) {});
 // To modify config after #ready has been executed, use #setConfig
     bg.BackgroundGeolocation.setConfig(bg.Config()).then((bg.State state) {
       bg.BackgroundGeolocation.sync();
