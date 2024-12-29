@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
@@ -6,7 +8,6 @@ import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
 import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
-
 part 'location_tracking_state.dart';
 
 class LocationTrackingCubit extends Cubit<LocationTrackingState> {
@@ -16,7 +17,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   LatLng initialcameraposition = LatLng(41.015137, 28.979530);
   final _location = Location();
   Set<Marker> markers = {};
-
+  final Completer<GoogleMapController> mapController = Completer<GoogleMapController>();
   final List<LatLng> polylineCoordinatesList = [];
   LocationData? currentPosition;
   //Used to measure the distance between the last added marker and the current location
@@ -96,7 +97,6 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
       if (lastMarkerPosition?.longitude != null && lastMarkerPosition?.latitude != null) {
         final distance = (geolocator.GeolocatorPlatform.instance
             .distanceBetween(lastMarkerPositionBackground!.latitude!, lastMarkerPositionBackground!.longitude!, latitude, longitude));
-        print('distance: $distance');
         if (distance > 90) {
           final markerId = MarkerId(((backgroundMarkers.length) + 1).toString());
           final marker = Marker(
@@ -157,7 +157,9 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   }
 
   Future<void> completeActivity() async {
-    await _locationCacheOperation.addFinishedLocation(markers: markers, polylines: polylineCoordinatesList);
+    final controller = await mapController.future;
+    final imageBytes = await controller.takeSnapshot();
+    await _locationCacheOperation.addFinishedLocation(markers: markers, polylines: polylineCoordinatesList, image: imageBytes);
     resetDatas();
     emit(state.copyWith(showPausedButtons: false));
   }
