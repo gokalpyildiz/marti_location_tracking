@@ -3,6 +3,7 @@ import 'package:marti_location_tracking/product/cache/hive/hive_cache_manager.da
 import 'package:marti_location_tracking/product/cache/product_cache.dart';
 import 'package:marti_location_tracking/product/navigation/app_router_handler.dart';
 import 'package:marti_location_tracking/product/state/viewmodel/project_cubit.dart';
+import 'package:marti_location_tracking/views/dashboard/viewmodel/dashboard_cubit.dart';
 
 /// Product container for dependency injection
 final class ProductContainer {
@@ -16,6 +17,7 @@ final class ProductContainer {
       //lazysingleton çağrıldığında oluşturulur verimlilik için, singleton doğrudan kullanılır.
       ..registerSingleton<ProductCache>(ProductCache(cacheManager: HiveCacheManager()))
       ..registerLazySingleton<ProjectCubit>(ProjectCubit.new)
+      ..registerLazySingleton<DashboardCubit>(DashboardCubit.new)
       ..registerLazySingleton<AppRouter>(AppRouter.new);
   }
 

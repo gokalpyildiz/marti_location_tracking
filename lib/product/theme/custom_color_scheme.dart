@@ -8,29 +8,29 @@ final class CustomColorScheme {
   //xx =>dont change because is used
   static const lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: Color.fromRGBO(15, 21, 35, 1), //xx
-    onPrimary: Color(0xFFFFFFFF), //xx
-    primaryContainer: Color.fromRGBO(243, 244, 246, 1), //xx
-    onPrimaryContainer: Color.fromRGBO(107, 114, 128, 1), //xx
-    secondary: Color.fromRGBO(27, 100, 242, 1), //xx
-    onSecondary: Color.fromRGBO(229, 241, 255, 1), //xx
-    secondaryContainer: Color.fromRGBO(195, 221, 253, 1), //xx
+    primary: Color.fromRGBO(3, 209, 1, 1), //xx
+    onPrimary: Color(0xFFFFFFFF),
+    primaryContainer: Color.fromRGBO(243, 244, 246, 1),
+    onPrimaryContainer: Color.fromRGBO(107, 114, 128, 1),
+    secondary: Color.fromRGBO(15, 21, 35, 1), //XX
+    onSecondary: Color.fromRGBO(107, 114, 128, 1), //XX
+    secondaryContainer: Color.fromRGBO(195, 221, 253, 1),
     onSecondaryContainer: Color(0xFF1D192B),
     tertiary: Color(0xFF7D5260),
     onTertiary: Color(0xFFFFFFFF),
     tertiaryContainer: Color(0xFFFFD8E4),
     onTertiaryContainer: Color(0xFF31111D),
-    error: Color.fromRGBO(255, 82, 71, 1), //xx
+    error: Color.fromRGBO(255, 82, 71, 1),
     //error: ColorName.crimsonRed,
     onError: Color(0xFFFFFFFF),
-    errorContainer: Color.fromRGBO(255, 229, 228, 1), //xx
+    errorContainer: Color.fromRGBO(255, 229, 228, 1),
     onErrorContainer: Color(0xFF410E0B),
-    outline: Color.fromRGBO(209, 213, 219, 1), //xx//xx
-    surface: Color(0xFFFFFFFF), //xx
-    onSurface: Color.fromRGBO(15, 21, 35, 1), //xx
-    surfaceContainer: Color.fromRGBO(229, 231, 235, 1), //xx,
+    outline: Color.fromRGBO(209, 213, 219, 1),
+    surface: Color(0xFFFFFFFF),
+    onSurface: Color.fromRGBO(15, 21, 35, 1),
+    surfaceContainer: Color.fromRGBO(229, 231, 235, 1),
     surfaceContainerHighest: Color(0xFFE7E0EC),
-    onSurfaceVariant: Color.fromRGBO(88, 93, 104, 1), //XX
+    onSurfaceVariant: Color.fromRGBO(88, 93, 104, 1),
     inverseSurface: Color(0xFF313033),
     onInverseSurface: Color(0xFFF4EFF4),
     inversePrimary: Color(0xFFD0BCFF),

@@ -4,11 +4,15 @@ import 'package:marti_location_tracking/product/navigation/app_router_handler.gr
 class AppRoute {
   static const splash = '/splash';
   static const locationTracking = '/locationTracking';
+  static const locationTrackingNested = 'locationTracking';
+  static const dashboard = '/dashboard';
+  static const profile = '/profile';
+  static const profileNested = 'profile';
 
-  static AutoRoute photoFullScreenRoute = AutoRoute(
-    path: locationTracking,
-    page: LocationTrackingRoute.page,
-  );
+  static List<AutoRoute> routes = [
+    splashRoute,
+    dashboardRoute,
+  ];
   static AutoRoute splashRoute = CustomRoute(
     path: splash,
     initial: true,
@@ -16,8 +20,8 @@ class AppRoute {
     transitionsBuilder: TransitionsBuilders.slideLeft,
   );
 
-  static List<AutoRoute> routes = [
-    splashRoute,
-    photoFullScreenRoute,
-  ];
+  static AutoRoute dashboardRoute = AutoRoute(path: dashboard, page: DashBoardRoute.page, children: [
+    AutoRoute(path: locationTrackingNested, page: LocationTrackingRoute.page, initial: true),
+    AutoRoute(path: profileNested, page: ProfileRoute.page),
+  ]);
 }
