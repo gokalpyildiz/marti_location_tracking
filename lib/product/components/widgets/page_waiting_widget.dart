@@ -48,9 +48,7 @@ class _PageWaitingWidgetState extends State<PageWaitingWidget> with SingleTicker
           animation: _controller,
           builder: (final BuildContext context, final Widget? child) => Opacity(
             opacity: _animationOpacity.value,
-            child: Assets.images.martiIcon.image(
-              // width: 90,
-              // height: 90,
+            child: Assets.lottie.martiLogo.lottie(
               width: _animationSize.value,
               height: _animationSize.value,
             ),
