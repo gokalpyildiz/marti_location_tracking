@@ -38,16 +38,18 @@ class LocationStoreFunction {
     await _locationStore.add(item: locationStoreModel, key: DatabaseKeys.LAST_UNFINISHED_TRACKING.value);
   }
 
-  Future<LocationStoreResponseModel?> getUnfinishedRoute() async {
+  Future<LocationStoreResponseModel?> getUnfinishedRoute(Function(double latitude, double longitude) openMarkerAddress) async {
     final lastUnfinishedRoute = await _locationStore.get(DatabaseKeys.LAST_UNFINISHED_TRACKING.value);
     if (lastUnfinishedRoute?.isFinished == false) {
       List<Marker> markers = [];
       List<LatLng> polylines = [];
       for (var element in lastUnfinishedRoute!.markers!) {
         markers.add(Marker(
-          markerId: MarkerId(element.markerId!),
-          position: LatLng(element.markerLat!, element.markerLong!),
-        ));
+            markerId: MarkerId(element.markerId!),
+            position: LatLng(element.markerLat!, element.markerLong!),
+            onTap: () {
+              openMarkerAddress(element.markerLat!, element.markerLong!);
+            }));
       }
       for (var element in lastUnfinishedRoute.polylines!) {
         polylines.add(LatLng(element.latitude!, element.longitude!));

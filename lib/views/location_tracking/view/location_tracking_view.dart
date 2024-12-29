@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/components/base_widgets/marti_scaffold.dart';
+import 'package:marti_location_tracking/product/components/dialog/show_address_dialog.dart';
 import 'package:marti_location_tracking/views/location_tracking/viewmodel/location_tracking_cubit.dart';
 part 'subwidgets/location_tracking_map.dart';
 part 'mixin/location_tracking_map_mixin.dart';
@@ -65,7 +67,16 @@ class _LocationTrackingViewState extends State<LocationTrackingView> with Widget
     return BlocProvider(
       create: (context) => cubit,
       child: SafeArea(
-        child: BlocBuilder<LocationTrackingCubit, LocationTrackingState>(
+        child: BlocConsumer<LocationTrackingCubit, LocationTrackingState>(
+          listener: (context, state) async {
+            if (state.selectedMarkerLatitude != null &&
+                state.selectedMarkerLongitude != null &&
+                state.selectedMarkerLatitude != 0 &&
+                state.selectedMarkerLongitude != 0) {
+              await ShowAddressDialog.show(latitude: state.selectedMarkerLatitude!, longitude: state.selectedMarkerLongitude!, context: context);
+              cubit.clearSelectedMarker();
+            }
+          },
           builder: (context, state) {
             return MartiScaffold(
               child: state.isLoading

@@ -13,7 +13,7 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
     geolocator.Geolocator.getPositionStream(
       locationSettings: geolocator.LocationSettings(accuracy: geolocator.LocationAccuracy.best),
     ).listen((position) async {
-      if (cubit.trackingStarted) {
+      if (cubit.trackingStarted && cubit.isBackground != true) {
         cubit.polylineCoordinatesList.add(LatLng(position.latitude, position.longitude));
         final GoogleMapController controller = await _mapController.future;
         controller.animateCamera(
@@ -21,6 +21,7 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
             CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 16),
           ),
         );
+        //
         if (cubit.lastMarkerPosition?.longitude != null && cubit.lastMarkerPosition?.latitude != null) {
           final distance = cubit.calculateDistance(
             startLat: cubit.lastMarkerPosition!.latitude!,
@@ -29,14 +30,16 @@ mixin LocationTrackingMapMixin on State<_LocationTrackingMap> {
             endLong: cubit.currentPosition!.longitude!,
           );
           if (distance > 90) {
-            cubit.addMarker(LatLng(position.latitude, position.longitude), 'Konum');
+            cubit.addMarker(LatLng(position.latitude, position.longitude));
+            cubit.currentPosition = LocationData.fromMap({'latitude': position.latitude, 'longitude': position.longitude});
             cubit.lastMarkerPosition = cubit.currentPosition;
             setState(() {});
           }
         } else {
-          cubit.addMarker(LatLng(position.latitude, position.longitude), 'Konum');
-          setState(() {});
+          cubit.addMarker(LatLng(position.latitude, position.longitude));
+          cubit.currentPosition = LocationData.fromMap({'latitude': position.latitude, 'longitude': position.longitude});
           cubit.lastMarkerPosition = cubit.currentPosition;
+          setState(() {});
         }
 
         setState(() {});
