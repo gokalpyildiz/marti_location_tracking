@@ -57,7 +57,12 @@ class _DashBoardViewState extends State<DashBoardView> {
               unselectedFontSize: 11,
               elevation: 0,
               type: BottomNavigationBarType.fixed,
-              onTap: tabsRouter.setActiveIndex,
+              onTap: (index) {
+                if (index == 1) {
+                  ProductStateItems.profileCubit.refreshDatas();
+                }
+                tabsRouter.setActiveIndex(index);
+              },
               backgroundColor: context.colorScheme.primary,
               items: [
                 BottomNavigationBarItem(

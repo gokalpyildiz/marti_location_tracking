@@ -15,6 +15,7 @@ class LocationStoreModel extends Equatable {
     this.markers,
     this.polylines,
     this.image,
+    this.date,
   });
 
   @HiveField(0)
@@ -25,12 +26,15 @@ class LocationStoreModel extends Equatable {
   final List<LatlngStoreModel>? polylines;
   @HiveField(3)
   final Uint8List? image;
+  @HiveField(4)
+  final DateTime? date;
 
   @override
   List<Object?> get props => [
         isFinished,
         markers,
         polylines,
+        date,
         image,
       ];
 }

@@ -15,6 +15,7 @@ class LocationStoreFunction {
   static LocationStoreFunction get instance => _instance;
   final _locationStore = ProductStateItems.productCache.locationCacheOperation;
 
+  //save completed activities
   Future<void> addFinishedLocation({required Set<Marker> markers, required List<LatLng> polylines, required Uint8List? image}) async {
     List<MarkerStoreModel> markerStoreList = [];
     List<LatlngStoreModel> polyLineList = [];
@@ -36,10 +37,12 @@ class LocationStoreFunction {
       markers: markerStoreList,
       polylines: polyLineList,
       image: image,
+      date: DateTime.now(),
     );
     await _locationStore.insert(item: locationStoreModel);
   }
 
+  //updates ongoing activity
   Future<void> updateUnfinishedLocation({required bool isFinished, required Set<Marker> markers, required List<LatLng> polylines}) async {
     List<MarkerStoreModel> markerStoreList = [];
     List<LatlngStoreModel> polyLineList = [];
@@ -64,6 +67,7 @@ class LocationStoreFunction {
     await _locationStore.add(item: locationStoreModel, key: DatabaseKeys.LAST_UNFINISHED_TRACKING.value);
   }
 
+  //getting activity in progress
   Future<LocationStoreResponseModel?> getUnfinishedRoute(Function(double latitude, double longitude) openMarkerAddress) async {
     final lastUnfinishedRoute = await _locationStore.get(DatabaseKeys.LAST_UNFINISHED_TRACKING.value);
     if (lastUnfinishedRoute?.isFinished == false) {
@@ -84,11 +88,13 @@ class LocationStoreFunction {
         isFinished: lastUnfinishedRoute.isFinished,
         markers: markers.toSet(),
         polylines: polylines,
+        date: lastUnfinishedRoute.date,
       );
     }
     return null;
   }
 
+  //getting completed activities
   Future<List<LocationStoreResponseModel?>> getAll(Function(double latitude, double longitude) openMarkerAddress) async {
     final allActivities = await _locationStore.getList();
     List<LocationStoreResponseModel?> response = [];
@@ -112,6 +118,7 @@ class LocationStoreFunction {
           markers: markers.toSet(),
           polylines: polylines,
           image: element.image,
+          date: element.date,
         );
         response.add(item);
       }

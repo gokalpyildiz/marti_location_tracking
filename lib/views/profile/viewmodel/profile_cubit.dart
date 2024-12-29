@@ -18,13 +18,21 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> setDatas() async {
     final response = await _locationCacheOperation.getAll(
-      (latitude, longitude) {
-        (double latitude, double longitude) async {
-          emit(state.copyWith(selectedMarkerLatitude: latitude, selectedMarkerLongitude: longitude));
-        };
-      },
+      openMarker,
     );
     locationStoreModelList = response;
+  }
+
+  Future<void> refreshDatas() async {
+    emit(state.copyWith(isLoading: true));
+    await setDatas();
+    emit(state.copyWith(isLoading: false));
+  }
+
+  void openMarker(latitude, longitude) {
+    (double latitude, double longitude) async {
+      emit(state.copyWith(selectedMarkerLatitude: latitude, selectedMarkerLongitude: longitude));
+    };
   }
 
   Future<void> remove(int index) async {

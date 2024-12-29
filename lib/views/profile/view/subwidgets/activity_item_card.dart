@@ -8,6 +8,8 @@ class _ActivityItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = context.read<ProfileCubit>();
+    final date = activity.date?.toStringLocalDateFormat;
+    final time = activity.date?.toHourMinuteString();
     return Slidable(
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
@@ -53,6 +55,20 @@ class _ActivityItemCard extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          'Date: $date',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          'Hour: $time',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
                           ),
                         ),
                       ],
