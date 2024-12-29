@@ -8,6 +8,9 @@ class AppRoute {
   static const dashboard = '/dashboard';
   static const profile = '/profile';
   static const profileNested = 'profile';
+  static const profileTab = 'profileTab';
+  static const activityDetail = '/activityDetail';
+  static const activityDetailNested = 'activityDetail';
 
   static List<AutoRoute> routes = [
     splashRoute,
@@ -22,6 +25,14 @@ class AppRoute {
 
   static AutoRoute dashboardRoute = AutoRoute(path: dashboard, page: DashBoardRoute.page, children: [
     AutoRoute(path: locationTrackingNested, page: LocationTrackingRoute.page, initial: true),
-    AutoRoute(path: profileNested, page: ProfileRoute.page, maintainState: false),
+    AutoRoute(page: ProfileTabRoute.page, path: profileTab, maintainState: true, children: [
+      AutoRoute(path: profileNested, page: ProfileRoute.page, maintainState: false),
+      AutoRoute(path: activityDetailNested, page: ActivityDetailRoute.page),
+    ]),
   ]);
+}
+
+@RoutePage()
+class ProfileTabView extends AutoRouter {
+  const ProfileTabView({super.key});
 }

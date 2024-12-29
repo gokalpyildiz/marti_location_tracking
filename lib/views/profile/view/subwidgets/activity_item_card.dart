@@ -27,7 +27,9 @@ class _ActivityItemCard extends StatelessWidget {
         ],
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          context.router.push(ActivityDetailRoute(activityIndex: index));
+        },
         child: Container(
           margin: EdgeInsets.only(top: 5, bottom: 5),
           decoration: BoxDecoration(
