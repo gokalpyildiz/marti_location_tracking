@@ -30,6 +30,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     emit(state.copyWith(isLoading: false));
   }
 
+  //reset tracking information
   Future<void> resetDatas() async {
     trackingStatus = TrackingStatusEnum.STOPED;
     polylineCoordinatesList.clear();
@@ -38,16 +39,19 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     await _locationCacheOperation.deleteUnfinishedRoute();
   }
 
+  //used to show the user's location
   Future<void> _setInitialCameraPosition() async {
     var currentPosition = await _location.getLocation();
     initialcameraposition = LatLng(currentPosition.latitude!, currentPosition.longitude!);
   }
 
+  //Used to add a marker every 100 meters
   double calculateDistance({required double startLat, required double startLong, required double endLat, required double endLong}) {
     final distance = (geolocator.GeolocatorPlatform.instance.distanceBetween(startLat, startLong, endLat, endLong));
     return distance;
   }
 
+  //Adds markers
   void addMarker(LatLng position) {
     if (position.latitude == 0 && position.longitude == 0) return;
     final markerId = MarkerId(((markers.length) + 1).toString());
@@ -62,6 +66,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     _locationCacheOperation.updateUnfinishedLocation(isFinished: false, markers: markers, polylines: polylineCoordinatesList);
   }
 
+  //devam eden aktiviteyi depolama alanından alma
   Future<void> getOngoingActivity() async {
     final locationStoreResponseModel = await _locationCacheOperation.getUnfinishedRoute(
       (double latitude, double longitude) async {
@@ -78,6 +83,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     }
   }
 
+  //Background tracking is stopped. It is allowed to continue in the foreground.
   Future<void> stopTrackingBackground() async {
     bg.BackgroundGeolocation.stop();
     await getOngoingActivity();
@@ -87,6 +93,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     }
   }
 
+  //Tracking continues in the background
   void startBackground() {
     if (trackingStatus == TrackingStatusEnum.STOPED) return;
     final locationCacheOperationBackground = LocationStoreFunction.instance;
