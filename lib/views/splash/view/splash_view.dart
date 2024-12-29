@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:marti_location_tracking/product/assets/asset.dart';
 import 'package:marti_location_tracking/product/components/base_widgets/marti_scaffold.dart';
 import 'package:marti_location_tracking/product/navigation/app_router_handler.gr.dart';
+import 'package:marti_location_tracking/product/utils/extensions/context_extension.dart';
 
 @RoutePage()
 class SplashView extends StatefulWidget {
@@ -13,9 +14,7 @@ class SplashView extends StatefulWidget {
   State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  int loopCount = 0;
+class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
@@ -26,13 +25,12 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   Future<void> navigateToHome() async {
     await Future.delayed(Duration(milliseconds: 2700));
     if (mounted) {
-      context.router.push(LocationTrackingRoute());
+      context.router.replace(DashBoardRoute());
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 
@@ -42,7 +40,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
       extendBodyBehindAppBar: true,
       child: Container(
         width: double.infinity,
-        decoration: BoxDecoration(color: Color.fromRGBO(49, 204, 0, 1)),
+        decoration: BoxDecoration(color: context.colorScheme.primary),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Center(
