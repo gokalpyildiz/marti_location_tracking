@@ -36,29 +36,7 @@ class __LocationTrackingMapState extends State<_LocationTrackingMap> with Locati
                   ),
               },
             ),
-            TextButton(
-                onPressed: () {
-                  switch (cubit.trackingStatus) {
-                    case TrackingStatusEnum.STARTED_CONTINUE:
-                      cubit.trackingStatus = TrackingStatusEnum.STARTED_PAUSED;
-                    case TrackingStatusEnum.STARTED_PAUSED:
-                      cubit.trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
-                    case TrackingStatusEnum.STOPED:
-                    case TrackingStatusEnum.BACKGROUND:
-                      cubit.trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
-                      break;
-                  }
-                },
-                child: Text('Start Tracking')),
-            Positioned(
-              bottom: 10,
-              child: TextButton(
-                  onPressed: () {
-                    cubit.reset();
-                    setState(() {});
-                  },
-                  child: Text('Reset')),
-            ),
+            if (state.showPausedButtons) _PausedButtons()
           ],
         );
       },

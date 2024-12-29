@@ -9,18 +9,18 @@ final class CustomColorScheme {
   static const lightColorScheme = ColorScheme(
     brightness: Brightness.light,
     primary: Color.fromRGBO(3, 209, 1, 1), //xx
-    onPrimary: Color(0xFFFFFFFF),
+    onPrimary: Color(0xFFFFFFFF), //XX
     primaryContainer: Color.fromRGBO(243, 244, 246, 1),
     onPrimaryContainer: Color.fromRGBO(107, 114, 128, 1),
     secondary: Color.fromRGBO(15, 21, 35, 1), //XX
     onSecondary: Color.fromRGBO(107, 114, 128, 1), //XX
     secondaryContainer: Color.fromRGBO(195, 221, 253, 1),
     onSecondaryContainer: Color(0xFF1D192B),
-    tertiary: Color(0xFF7D5260),
+    tertiaryContainer: Color(0xFF7D5260),
     onTertiary: Color(0xFFFFFFFF),
-    tertiaryContainer: Color(0xFFFFD8E4),
+    tertiary: Color.fromRGBO(27, 100, 242, 1), //XX
     onTertiaryContainer: Color(0xFF31111D),
-    error: Color.fromRGBO(255, 82, 71, 1),
+    error: Color.fromRGBO(255, 82, 71, 1), //XX
     //error: ColorName.crimsonRed,
     onError: Color(0xFFFFFFFF),
     errorContainer: Color.fromRGBO(255, 229, 228, 1),

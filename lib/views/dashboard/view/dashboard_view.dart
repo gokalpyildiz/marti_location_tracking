@@ -14,11 +14,12 @@ class DashBoardView extends StatefulWidget {
 }
 
 class _DashBoardViewState extends State<DashBoardView> {
-  final _bottomBarKey = GlobalKey();
+  final GlobalKey<AutoTabsRouterState> _bottomBarKey = GlobalKey<AutoTabsRouterState>();
 
   @override
   Widget build(BuildContext context) {
-    var activeColor = context.colorScheme.secondary;
+    final activeColor = context.colorScheme.secondary;
+    final locationCubit = ProductStateItems.locationTrackingCubit;
     return BlocProvider.value(
       value: ProductStateItems.dashboardCubit,
       child: BlocBuilder<DashboardCubit, DashboardState>(
@@ -35,7 +36,15 @@ class _DashBoardViewState extends State<DashBoardView> {
             );
           },
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () async {
+              final tabsRouter = _bottomBarKey.currentContext?.tabsRouter;
+              //if not on location page go to location page
+              if (tabsRouter?.activeIndex != 0) {
+                tabsRouter?.setActiveIndex(0);
+                return;
+              }
+              locationCubit.showPausedButtons();
+            },
             child: Icon(Icons.play_arrow, color: context.colorScheme.primary),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -6,12 +6,17 @@ import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/components/base_widgets/marti_scaffold.dart';
+import 'package:marti_location_tracking/product/components/dialog/info_dialog.dart';
 import 'package:marti_location_tracking/product/components/dialog/show_address_dialog.dart';
+import 'package:marti_location_tracking/product/components/widgets/buttons/base_button.dart';
+import 'package:marti_location_tracking/product/components/widgets/refresh_button.dart';
 import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
+import 'package:marti_location_tracking/product/state/container/product_state_items.dart';
 import 'package:marti_location_tracking/product/utils/extensions/context_extension.dart';
 import 'package:marti_location_tracking/views/location_tracking/viewmodel/location_tracking_cubit.dart';
 part 'subwidgets/location_tracking_map.dart';
 part 'mixin/location_tracking_map_mixin.dart';
+part 'subwidgets/paused_buttons.dart';
 
 @RoutePage()
 class LocationTrackingView extends StatefulWidget {
@@ -27,7 +32,7 @@ class _LocationTrackingViewState extends State<LocationTrackingView> with Widget
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    cubit = LocationTrackingCubit();
+    cubit = ProductStateItems.locationTrackingCubit;
   }
 
   @override
