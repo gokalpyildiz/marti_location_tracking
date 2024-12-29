@@ -1,10 +1,21 @@
 part of 'location_tracking_cubit.dart';
 
-sealed class LocationTrackingState extends Equatable {
-  const LocationTrackingState();
+class LocationTrackingState extends Equatable {
+  const LocationTrackingState({
+    this.isLoading = true,
+  });
+  final bool isLoading;
 
   @override
-  List<Object> get props => [];
-}
+  List<Object> get props => [
+        isLoading,
+      ];
 
-final class LocationTrackingInitial extends LocationTrackingState {}
+  LocationTrackingState copyWith({
+    bool? isLoading,
+  }) {
+    return LocationTrackingState(
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
+}

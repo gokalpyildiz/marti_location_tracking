@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:marti_location_tracking/product/cache/hive/database_keys.dart';
 import 'package:marti_location_tracking/product/model/latlng_store_model.dart';
 import 'package:marti_location_tracking/product/model/location_store_model.dart';
 import 'package:marti_location_tracking/product/model/location_store_response_model.dart';
@@ -13,7 +14,7 @@ class LocationStoreFunction {
   static LocationStoreFunction get instance => _instance;
   final _locationStore = ProductStateItems.productCache.locationCacheOperation;
 
-  Future<void> addLocation({required bool isFinished, required Set<Marker> markers, required List<LatLng> polylines}) async {
+  Future<void> updateUnfinishedLocation({required bool isFinished, required Set<Marker> markers, required List<LatLng> polylines}) async {
     List<MarkerStoreModel> markerStoreList = [];
     List<LatlngStoreModel> polyLineList = [];
     for (var element in polylines) {
@@ -30,35 +31,38 @@ class LocationStoreFunction {
       ));
     }
     LocationStoreModel locationStoreModel = LocationStoreModel(
-      isFinished: false,
+      isFinished: isFinished,
       markers: markerStoreList,
       polylines: polyLineList,
     );
-    await _locationStore.insert(item: locationStoreModel);
+    await _locationStore.add(item: locationStoreModel, key: DatabaseKeys.LAST_UNFINISHED_TRACKING.value);
   }
 
   Future<LocationStoreResponseModel?> getUnfinishedRoute() async {
-    final locationStoreModel = await _locationStore.getList();
-    final lastRoute = locationStoreModel?.lastOrNull;
-    if (lastRoute?.isFinished == false) {
+    final lastUnfinishedRoute = await _locationStore.get(DatabaseKeys.LAST_UNFINISHED_TRACKING.value);
+    if (lastUnfinishedRoute?.isFinished == false) {
       List<Marker> markers = [];
       List<LatLng> polylines = [];
-      for (var element in lastRoute!.markers!) {
+      for (var element in lastUnfinishedRoute!.markers!) {
         markers.add(Marker(
           markerId: MarkerId(element.markerId!),
           position: LatLng(element.markerLat!, element.markerLong!),
         ));
       }
-      for (var element in lastRoute.polylines!) {
+      for (var element in lastUnfinishedRoute.polylines!) {
         polylines.add(LatLng(element.latitude!, element.longitude!));
       }
       return LocationStoreResponseModel(
-        isFinished: lastRoute.isFinished,
+        isFinished: lastUnfinishedRoute.isFinished,
         markers: markers.toSet(),
         polylines: polylines,
       );
     }
     return null;
+  }
+
+  Future<void> deleteUnfinishedRoute() async {
+    await _locationStore.remove(DatabaseKeys.LAST_UNFINISHED_TRACKING.value);
   }
 
   Future<void> clear() async {
