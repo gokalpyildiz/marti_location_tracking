@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
 import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 part 'location_tracking_state.dart';
 
@@ -28,7 +28,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     emit(state.copyWith(isLoading: false));
   }
 
-  Future<void> reset() async {
+  Future<void> resetDatas() async {
     trackingStatus = TrackingStatusEnum.STOPED;
     polylineCoordinatesList.clear();
     markers.clear();
@@ -156,7 +156,39 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     });
   }
 
+  Future<void> completeActivity() async {
+    await _locationCacheOperation.addFinishedLocation(markers: markers, polylines: polylineCoordinatesList);
+    resetDatas();
+    emit(state.copyWith(showPausedButtons: false));
+  }
+
+  void restartActivity() async {
+    resetDatas();
+    trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
+    emit(state.copyWith(showPausedButtons: false));
+  }
+
+  void resumeActivity() {
+    trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
+    emit(state.copyWith(showPausedButtons: false));
+  }
+
   void clearSelectedMarker() {
     emit(state.copyWith(selectedMarkerLatitude: 0, selectedMarkerLongitude: 0));
+  }
+
+  void showPausedButtons() {
+    switch (trackingStatus) {
+      case TrackingStatusEnum.STOPED:
+        resumeActivity();
+        break;
+      case TrackingStatusEnum.STARTED_PAUSED:
+        emit(state.copyWith(showPausedButtons: true));
+      case TrackingStatusEnum.STARTED_CONTINUE:
+        trackingStatus = TrackingStatusEnum.STARTED_PAUSED;
+        emit(state.copyWith(showPausedButtons: true));
+      case TrackingStatusEnum.BACKGROUND:
+        break;
+    }
   }
 }

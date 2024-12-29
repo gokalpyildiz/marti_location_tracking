@@ -14,6 +14,30 @@ class LocationStoreFunction {
   static LocationStoreFunction get instance => _instance;
   final _locationStore = ProductStateItems.productCache.locationCacheOperation;
 
+  Future<void> addFinishedLocation({required Set<Marker> markers, required List<LatLng> polylines}) async {
+    List<MarkerStoreModel> markerStoreList = [];
+    List<LatlngStoreModel> polyLineList = [];
+    for (var element in polylines) {
+      polyLineList.add(LatlngStoreModel(
+        latitude: element.latitude,
+        longitude: element.longitude,
+      ));
+    }
+    for (var element in markers) {
+      markerStoreList.add(MarkerStoreModel(
+        markerId: element.markerId.toString(),
+        markerLat: element.position.latitude,
+        markerLong: element.position.longitude,
+      ));
+    }
+    LocationStoreModel locationStoreModel = LocationStoreModel(
+      isFinished: true,
+      markers: markerStoreList,
+      polylines: polyLineList,
+    );
+    await _locationStore.insert(item: locationStoreModel);
+  }
+
   Future<void> updateUnfinishedLocation({required bool isFinished, required Set<Marker> markers, required List<LatLng> polylines}) async {
     List<MarkerStoreModel> markerStoreList = [];
     List<LatlngStoreModel> polyLineList = [];
