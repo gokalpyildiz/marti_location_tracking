@@ -47,25 +47,17 @@ class _LocationTrackingViewState extends State<LocationTrackingView> with Widget
 
     switch (state) {
       case AppLifecycleState.resumed:
-        print("Uygulama ön planda.");
         cubit.trackingStatus = TrackingStatusEnum.BACKGROUND;
         await cubit.stopTrackingBackground();
         break;
       case AppLifecycleState.inactive:
-        print("Uygulama inaktif.");
         cubit.startBackground();
         break;
       case AppLifecycleState.paused:
-        print("Uygulama arka planda.");
-        // cubit.startBackground();
         break;
       case AppLifecycleState.detached:
-        print("Uygulama kapatılıyor.");
-        // cubit.startBackground();
         break;
       case AppLifecycleState.hidden:
-        print("Uygulama gizlendi.");
-        // cubit.startBackground();
         break;
     }
   }

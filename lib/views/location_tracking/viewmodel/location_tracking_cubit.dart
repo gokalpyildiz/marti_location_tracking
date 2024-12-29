@@ -79,6 +79,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   }
 
   Future<void> stopTrackingBackground() async {
+    bg.BackgroundGeolocation.stop();
     await getOngoingActivity();
     if (trackingStatus == TrackingStatusEnum.BACKGROUND) {
       trackingStatus = TrackingStatusEnum.STARTED_CONTINUE;
@@ -87,6 +88,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   }
 
   void startBackground() {
+    if (trackingStatus == TrackingStatusEnum.STOPED) return;
     final locationCacheOperationBackground = LocationStoreFunction.instance;
     final backgroundMarkers = markers;
     final backgroundPolylineCoordinatesList = polylineCoordinatesList;
@@ -98,7 +100,6 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
       if (lastMarkerPosition?.longitude != null && lastMarkerPosition?.latitude != null) {
         final distance = (geolocator.GeolocatorPlatform.instance
             .distanceBetween(lastMarkerPositionBackground!.latitude!, lastMarkerPositionBackground!.longitude!, latitude, longitude));
-        print('distance: $distance');
         if (distance > 90) {
           final markerId = MarkerId(((backgroundMarkers.length) + 1).toString());
           final marker = Marker(
@@ -132,14 +133,10 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
     });
 
     // Fired whenever the plugin changes motion-state (stationary->moving and vice-versa)
-    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
-      print('[motionchange] - ${location.coords.latitude}, ${location.coords.latitude}');
-    });
+    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {});
 
     // Fired whenever the state of location-services changes.  Always fired at boot
-    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
-      print('[providerchange] - $event');
-    });
+    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {});
 
     ////
     // 2.  Configure the plugin

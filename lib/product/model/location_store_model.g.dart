@@ -21,13 +21,14 @@ class LocationStoreModelAdapter extends TypeAdapter<LocationStoreModel> {
       markers: (fields[1] as List?)?.cast<MarkerStoreModel>(),
       polylines: (fields[2] as List?)?.cast<LatlngStoreModel>(),
       image: fields[3] as Uint8List?,
+      date: fields[4] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, LocationStoreModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.isFinished)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class LocationStoreModelAdapter extends TypeAdapter<LocationStoreModel> {
       ..writeByte(2)
       ..write(obj.polylines)
       ..writeByte(3)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(4)
+      ..write(obj.date);
   }
 
   @override
