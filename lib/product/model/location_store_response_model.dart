@@ -13,6 +13,7 @@ class LocationStoreResponseModel extends Equatable {
     this.markers,
     this.polylines,
     this.image,
+    this.date,
   });
 
   @HiveField(0)
@@ -23,6 +24,8 @@ class LocationStoreResponseModel extends Equatable {
   final List<LatLng>? polylines;
   @HiveField(3)
   final Uint8List? image;
+  @HiveField(4)
+  final DateTime? date;
 
   @override
   List<Object?> get props => [
@@ -30,6 +33,7 @@ class LocationStoreResponseModel extends Equatable {
         markers,
         image,
         polylines,
+        date,
       ];
 
   LocationStoreResponseModel copyWith({

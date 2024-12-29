@@ -6,7 +6,9 @@ import 'package:marti_location_tracking/product/assets/asset.dart';
 import 'package:marti_location_tracking/product/components/base_widgets/marti_scaffold.dart';
 import 'package:marti_location_tracking/product/model/location_store_response_model.dart';
 import 'package:marti_location_tracking/product/navigation/app_router_handler.gr.dart';
+import 'package:marti_location_tracking/product/state/container/product_state_items.dart';
 import 'package:marti_location_tracking/product/utils/extensions/context_extension.dart';
+import 'package:marti_location_tracking/product/utils/extensions/date_time_extension.dart';
 import 'package:marti_location_tracking/views/profile/viewmodel/profile_cubit.dart';
 
 part 'subwidgets/activity_item_card.dart';
@@ -24,13 +26,13 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void initState() {
     super.initState();
-    cubit = ProfileCubit();
+    cubit = ProductStateItems.profileCubit;
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => cubit,
+    return BlocProvider.value(
+      value: cubit,
       child: SafeArea(
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
@@ -44,7 +46,6 @@ class _ProfileViewState extends State<ProfileView> {
               child: ListView.builder(
                   itemCount: allActivities.length,
                   padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   reverse: true,
                   itemBuilder: (BuildContext context, int index) {

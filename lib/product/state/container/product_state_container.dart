@@ -5,6 +5,7 @@ import 'package:marti_location_tracking/product/navigation/app_router_handler.da
 import 'package:marti_location_tracking/product/state/viewmodel/project_cubit.dart';
 import 'package:marti_location_tracking/views/dashboard/viewmodel/dashboard_cubit.dart';
 import 'package:marti_location_tracking/views/location_tracking/viewmodel/location_tracking_cubit.dart';
+import 'package:marti_location_tracking/views/profile/viewmodel/profile_cubit.dart';
 
 /// Product container for dependency injection
 final class ProductContainer {
@@ -19,6 +20,7 @@ final class ProductContainer {
       ..registerSingleton<ProductCache>(ProductCache(cacheManager: HiveCacheManager()))
       ..registerLazySingleton<ProjectCubit>(ProjectCubit.new)
       ..registerLazySingleton<DashboardCubit>(DashboardCubit.new)
+      ..registerLazySingleton<ProfileCubit>(ProfileCubit.new)
       ..registerLazySingleton<LocationTrackingCubit>(LocationTrackingCubit.new)
       ..registerLazySingleton<AppRouter>(AppRouter.new);
   }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -20,10 +21,13 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
-  int loopCount = 0;
+  int _timeCount = 0;
   @override
   void initState() {
     super.initState();
+    Timer.periodic(Duration(milliseconds: 500), (timer) {
+      _timeCount++;
+    });
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
     checkPermission();
   }
@@ -44,7 +48,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> navigateToHome() async {
-    await Future.delayed(Duration(milliseconds: 2700));
+    await Future.delayed(Duration(milliseconds: 2700 - _timeCount * 500));
     if (mounted) {
       context.router.replace(DashBoardRoute());
     }
