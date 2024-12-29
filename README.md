@@ -21,7 +21,7 @@
     </ul>
     <h2>📸 Ekran Görüntüleri</h2>
     <p>Aşağıda uygulamamızın ekran görüntüleri bulunmaktadır:</p>
-<img src="preview/splash.png" width="200" height="400"> <img src="preview/home1.png" width="200" height="400"> <img src="preview/home1.png" width="200" height="400"> <img src="preview/home2.png" width="200" height="400"> <img src="preview/home3.png" width="200" height="400"> <img src="preview/home4.png" width="200" height="400"> <img src="preview/home5.png" width="200" height="400"> <img src="preview/address.png" width="200" height="400"> 
+<img src="preview/splash.png" width="200" height="400"> <img src="preview/home1.png" width="200" height="400"> <img src="preview/home1.png" width="200" height="400"> <img src="preview/home2.png" width="200" height="400"> <img src="preview/home3.png" width="200" height="400"> <img src="preview/home4.png" width="200" height="400"> <img src="preview/delete.png" width="200" height="400">  <img src="preview/home5.png" width="200" height="400"> <img src="preview/address.png" width="200" height="400"> 
   </div>
 </body>
 </html>
