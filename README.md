@@ -22,6 +22,10 @@
     <h2>📸 Ekran Görüntüleri</h2>
     <p>Aşağıda uygulamamızın ekran görüntüleri bulunmaktadır:</p>
 <img src="preview/splash.png" width="200" height="400"> <img src="preview/home1.png" width="200" height="400"> <img src="preview/home1.png" width="200" height="400"> <img src="preview/home2.png" width="200" height="400"> <img src="preview/home3.png" width="200" height="400"> <img src="preview/home4.png" width="200" height="400"> <img src="preview/delete.png" width="200" height="400">  <img src="preview/home5.png" width="200" height="400"> <img src="preview/address.png" width="200" height="400"> 
+
+https://github.com/user-attachments/assets/772d0db1-1e03-4456-8db5-0017f197d24b
+
+
   </div>
 </body>
 </html>
