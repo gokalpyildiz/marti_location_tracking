@@ -11,7 +11,7 @@
     <p>Bu repo, bir kullanıcının konumunu izleyen, her 100 metrede bir haritaya işaretçi ekleyen ve geçmiş konum verilerini görselleştirmek için ek özellikler sunan bir mobil uygulamadır</p>
     <h2>📚 Özellikler</h2>
     <ul>
-      <li>Kullanıcının konumunu hem ön planda hem de arka planda sürekli olarak izler.</li>
+      <li>Kullanıcının aktiviteye başladığı durumda konum bilgileri ön planda, arka planda ve uygulama kapatıldığında sürekli olarak izlenir.</li>
       <li>Her 100 metre değişiklikte haritaya marker ekler.</li>
       <li>Bir markera tıklandığında, o konuma ait adres bilgilerini gösterir.</li>
       <li>Kullanıcı konum takibini isteğe bağlı olarak başlatabilir veya durdurabilir.</li>
