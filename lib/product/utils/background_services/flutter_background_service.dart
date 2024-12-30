@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
+import 'package:marti_location_tracking/product/state/container/product_state_items.dart';
 import 'package:marti_location_tracking/product/utils/background_services/base/ILocationBackgroundService.dart';
 import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' as fb;
@@ -23,7 +24,7 @@ class FlutterBackgroundService implements IBackgroundService {
       required List<LatLng> polylineCoordinatesList,
       required LocationData? lastMarkerPosition}) async {
     if (trackingStatus == TrackingStatusEnum.STOPED || trackingStatus == TrackingStatusEnum.STARTED_PAUSED) return;
-    final locationCacheOperationBackground = LocationStoreFunction.instance;
+    final locationCacheOperationBackground = LocationStoreFunction(locationStore: ProductStateItems.productCache.locationCacheOperation);
     final backgroundMarkers = markers;
     final backgroundPolylineCoordinatesList = polylineCoordinatesList;
     _service.startService();

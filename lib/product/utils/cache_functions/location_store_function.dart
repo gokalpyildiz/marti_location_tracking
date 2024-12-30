@@ -3,17 +3,28 @@ import 'dart:typed_data';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:marti_location_tracking/product/cache/hive/database_keys.dart';
+import 'package:marti_location_tracking/product/cache/hive/hive_cache_operation.dart';
 import 'package:marti_location_tracking/product/model/latlng_store_model.dart';
 import 'package:marti_location_tracking/product/model/location_store_model.dart';
 import 'package:marti_location_tracking/product/model/location_store_response_model.dart';
 import 'package:marti_location_tracking/product/model/marker_store_model.dart';
-import 'package:marti_location_tracking/product/state/container/product_state_items.dart';
 
 class LocationStoreFunction {
-  LocationStoreFunction._init();
-  static final LocationStoreFunction _instance = LocationStoreFunction._init();
-  static LocationStoreFunction get instance => _instance;
-  final _locationStore = ProductStateItems.productCache.locationCacheOperation;
+  static LocationStoreFunction? _instance;
+  factory LocationStoreFunction({
+    required HiveCacheOperation<LocationStoreModel> locationStore,
+  }) {
+    _instance ??= LocationStoreFunction._internal(
+      locationStore: locationStore,
+    );
+    return _instance!;
+  }
+  late final HiveCacheOperation<LocationStoreModel> _locationStore;
+  LocationStoreFunction._internal({
+    required HiveCacheOperation<LocationStoreModel> locationStore,
+  }) {
+    _locationStore = locationStore;
+  }
 
   //save completed activities
   Future<void> addFinishedLocation({required Set<Marker> markers, required List<LatLng> polylines, required Uint8List? image}) async {
