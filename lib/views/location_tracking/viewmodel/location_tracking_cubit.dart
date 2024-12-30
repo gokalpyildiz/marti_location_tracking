@@ -6,7 +6,8 @@ import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
-import 'package:marti_location_tracking/product/utils/background_services/location_background_service.dart';
+import 'package:marti_location_tracking/product/utils/background_services/background_fetch_service.dart';
+import 'package:marti_location_tracking/product/utils/background_services/base/ILocationBackgroundService.dart';
 import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 
 part 'location_tracking_state.dart';
@@ -15,6 +16,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   LocationTrackingCubit() : super(LocationTrackingState()) {
     init();
   }
+  late IBackgroundService _locationBackgroundService;
   LatLng initialcameraposition = LatLng(41.015137, 28.979530);
   final _location = Location();
   Set<Marker> markers = {};
@@ -25,8 +27,8 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   LocationData? lastMarkerPosition;
   TrackingStatusEnum trackingStatus = TrackingStatusEnum.STOPED;
   final _locationCacheOperation = LocationStoreFunction.instance;
-  final _locationBackgroundService = LocationBackgroundService.instance;
   Future<void> init() async {
+    _locationBackgroundService = BackgroundFetchService.instance;
     await Future.wait([_setInitialCameraPosition(), getOngoingActivity()]);
     emit(state.copyWith(isLoading: false));
   }
