@@ -31,7 +31,7 @@ class PlatformChannelService implements IBackgroundService {
         final location = LatLng(locationData['latitude']!, locationData['longitude']!);
         final latitude = location.latitude;
         final longitude = location.longitude;
-        debugPrint('Location: ${location.latitude} - ${location.longitude}');
+        debugPrint('Location: ${location.latitude} - ${location.longitude} ${DateTime.now()}');
         final distance = (geolocator.GeolocatorPlatform.instance
             .distanceBetween(lastMarkerPosition!.latitude!, lastMarkerPosition!.longitude!, latitude, longitude));
         if (distance > 90) {
@@ -66,10 +66,10 @@ class PlatformChannelService implements IBackgroundService {
 }
 
 class _LocationUpdates {
-  static const EventChannel _eventChannel = EventChannel('com.gokalpyildiz.marti_location_updates');
-
   Stream<Map<String, double>> get locationStream {
-    var response = _eventChannel.receiveBroadcastStream().map((event) => Map<String, double>.from(event));
+    final EventChannel eventChannel = EventChannel('com.gokalpyildiz.marti_location_updates');
+
+    var response = eventChannel.receiveBroadcastStream().map((event) => Map<String, double>.from(event));
     return response;
   }
 }
