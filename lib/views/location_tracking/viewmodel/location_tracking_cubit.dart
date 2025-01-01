@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:marti_location_tracking/product/enum/tracking_status_enum.dart';
 import 'package:marti_location_tracking/product/utils/background_services/base/ILocationBackgroundService.dart';
-import 'package:marti_location_tracking/product/utils/background_services/location_background_service.dart';
+import 'package:marti_location_tracking/product/utils/background_services/platform_channel_service.dart';
 import 'package:marti_location_tracking/product/utils/cache_functions/location_store_function.dart';
 
 part 'location_tracking_state.dart';
@@ -29,7 +29,7 @@ class LocationTrackingCubit extends Cubit<LocationTrackingState> {
   TrackingStatusEnum trackingStatus = TrackingStatusEnum.STOPED;
   late LocationStoreFunction _locationCacheOperation;
   Future<void> init() async {
-    _locationBackgroundService = LocationBackgroundService.instance;
+    _locationBackgroundService = PlatformChannelService.instance;
     await Future.wait([_setInitialCameraPosition(), getOngoingActivity()]);
     emit(state.copyWith(isLoading: false));
   }
