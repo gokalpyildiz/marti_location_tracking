@@ -2,9 +2,8 @@ package com.gokalpyildiz.marti_location_tracking
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -33,7 +32,8 @@ class MainActivity : FlutterActivity() {
             when (call.method) {
                 "startBackground" -> {
                     if (checkPermissions()) {
-                        startLocationUpdates()
+                        //startLocationUpdates()
+                        actionStart()
                         result.success("Konum takibi başlatıldı.")
                     } else {
                         requestPermissions()
@@ -76,7 +76,7 @@ class MainActivity : FlutterActivity() {
     private fun startLocationUpdates() {
         val locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY, 1000
-        ).setMinUpdateDistanceMeters(10f).build()
+        ).build()
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -96,6 +96,13 @@ class MainActivity : FlutterActivity() {
 
     private fun stopLocationUpdates() {
         fusedLocationProviderClient?.removeLocationUpdates(locationCallback!!)
+        locationCallback = null
         eventSink = null
+    }
+    private fun actionStart() {
+        Intent(applicationContext, LocationService::class.java).apply {
+            action = LocationService.ACTION_START
+            startService(this)
+        }
     }
 }
